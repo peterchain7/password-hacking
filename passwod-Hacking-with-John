@@ -1,0 +1,95 @@
+How to crack a PDF password with Brute Force using John the Ripper in Kali Linux
+MAY 05 2019  68.8K  3 COMMENTS 
+John the Ripper is a fast password cracker, currently available for many flavors of Unix, macOS, Windows, DOS, BeOS, and OpenVMS (the latter requires a contributed patch). Its primary purpose is to detect weak Unix passwords. Besides several crypt(3) password hash types most commonly found on various Unix flavors, supported out of the box are Kerberos/AFS and Windows LM hashes, as well as DES-based tripcodes, plus hundreds of additional hashes and ciphers in "-jumbo" versions.
+
+In this article we will explain you how to try to crack a PDF with password using a brute-force attack with JohnTheRipper.
+
+1. Build JohnTheRipper binaries
+We will need to work with the Jumbo version of JohnTheRipper. This is a community-enhanced, "jumbo" version of John the Ripper. It has a lot of code, documentation, and data contributed by the user community. This is not "official" John the Ripper code. It is very easy for new code to be added to jumbo: the quality requirements are low. This means that you get a lot of functionality that is not "mature" enough or is otherwise inappropriate for the official JtR, which in turn also means that bugs in this code are to be expected.
+
+Proceed to obtain the source code of JohnTheRipper (The "bleeding-jumbo" branch (default) is based on 1.8.0-Jumbo-1) from the repository at Github with the following command (or download the zip with the content and extract into some directory):
+
+git clone https://github.com/magnumripper/JohnTheRipper.git
+This will create a directory namely JohnTheRipper in the current directory. You can read more about the "Jumbo" version of JohnTheRipper project in the official website or visit the un-official code repository at Github here. Switch to the src directory of JohnTheRipper with the following command:
+
+cd ./JohnTheRipper/src
+Proceed to download the package lists from the repositories with the following command:
+
+sudo apt-get update
+And install libssl:
+
+sudo apt-get install libssl-dev
+The library requires libssl (openssl) to be installed in your system, so in case you don't have it the previous command will do the trick to accomplish this requirement. Once the repository has been cloned, proceed to enter into the source directory that contains the source code of JohnTheRipper:
+
+cd ./JohnTheRipper/src
+Inside this directory we will proceed with the build with the following instruction:
+
+./configure && make
+This version of Jumbo has autoconf that supports the very common chain, allowing you to compile the sources on a Unix-like system. Once the build process finishes, switch to the run directory inside the JohnTheRipper directory:
+
+cd ..
+
+cd ./run
+Inside this directory you will find (after the build) all the tools that the library has to offer (including john itself), you can list the directory to compare:
+
+ls
+You will see all the tools of JohnTheRipper inside this directory:
+
+JohnTheRipper CLI Tools
+
+Now that you have the tools to proceed, let's get started with the brute force attack.
+
+2. Generate PDF hash file
+JohnTheRipper, as mentioned at the beginning of the article is not related by itself to PDF´s, but to passwords and security stuff. That's why you will need to create the hash file of the PDF using the pdf2john.pl tool (available in the run directory after compiling from source). This tool allows you to obtain the hash (Read meta information) of the file through this perl script, which can be extracted into a new file with the following command:
+
+pdf2john.pl /root/Desktop/pdf_protected.pdf > /root/Desktop/pdf.hash
+This command will create a .hash file in the defined directory. This is the file that we will use to work with JohnTheRipper tool:
+
+pdf2john.pl Generate PDF Hash
+
+The pdf.hash file contains a text like:
+
+/root/Desktop/pdf_protected.pdf:$pdf$4*4*128*-4*1*16*d22933dd530666ced293ccf5f860214f*32*ab12d2e30eae3d43d69ac57efc2918c128bf4e5e4e758a4164004e56fffa0108*32*07419b7fe590bdc9926bb9750adeedb8c07b5407d9b5314c012d16e25e9e7f20
+Now that we have the hash file, we can proceed with the brute forcing using the john CLI tool.
+
+3. Brute Force with John
+Now that we have the .hash file of the PDF with password that we want to unlock, we just need to pass the file as argument to the CLI tool of JohnTheRipper (in the run directory):
+
+john protected_pdf.hash
+This will use UTF-8 as the default input encoding and will start to guess the password of the PDF file using the default wordlist of the library. If it's found, it will display the password and the path to the protected PDF:
+
+Decrypted PDF Password Kali Linux JohnTheRipper
+
+If you try to run the command on the same file after the password has been guessed, you will see the following messages: "No password hashes loaded", "No password hashes loaded", or "No password hashes left to crack (see FAQ)". Cracked passwords will be printed to the terminal and saved in the file called $JOHN/john.pot (in the documentation and in the configuration file for John, "$JOHN" refers to John's "home directory"; which directory it really is depends on how you installed John). The $JOHN/john.pot file is also used to not load password hashes that you already cracked when you run John the next time.
+
+If that's the case, you will be able to see the password again of the same file using the --show flag:
+
+john --show /root/Desktop/pdf.hash
+So the password will be shown (in our case 54321):
+
+JohnTheRipper Show Password Hash
+
+Using a custom word list
+If you don't want to use the default password.lst file of JohnTheRipper, just specify the path to the new file using the --wordlist argument:
+
+john --wordlist=password.lst protected_pdf.hash
+As final recommendation, the tool offers to crack a lot of files, so you may want to read the documentation of the library. The rest of documentation is located in separate files, listed here in the recommended order of reading:
+
+INSTALL - installation instructions
+OPTIONS - command line options and additional utilities
+EXAMPLES - usage examples - strongly recommended
+MODES - cracking modes: what they are
+FAQ - frequently asked questions
+BUGS - list of known bugs
+DYNAMIC - how to use dynamic format in JtR
+DYNAMIC COMPILER FORMATS - List of known hash formats built using the dynamic compiler
+DYNAMIC_SCRIPTING - how to build/optimise a format that uses dynamic
+README.bash-completion - how to enable bash completion for JtR
+CONTACT (*) - how to contact the author or otherwise obtain support
+CONFIG (*) - how to customize
+EXTERNAL (*) - defining an external mode
+RULES (*) - wordlist rules syntax
+CHANGES (*) - history of changes
+CREDITS (*) - credits
+LICENSE - copyrights and licensing terms
+COPYING - GNU GPL version 2, as referenced by LICENSE above
