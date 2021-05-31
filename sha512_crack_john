@@ -8,4 +8,6 @@
           $6$SWybS8o2$9diveQinxy8PJQnGQQWbTNKeb2AiSp.i8KznuAjYbqI3q04Rf5hjHPer3weiC.2MrOj2o1Sw/fd2cu0kC6dUP.
             
             
-            These are sha512 password hashes ($6$)....save to a file (hash1) these hashes then run  john hash1 -wordlist=/usr/share/wordlists/fasttrack.txt
+            These are sha512 password hashes ($6$)....save to a file (hash1) these hashes then run 
+            
+                  john hash1 -wordlist=/usr/share/wordlists/fasttrack.txt
