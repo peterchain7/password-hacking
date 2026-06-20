@@ -55,6 +55,49 @@ for list in animals.txt football-players.txt football.txt others.txt rivers.txt 
 
     echo "[+] Current Wordlist: $list"
 
+
+    # Symbol(s) at start + Word + Digits
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=][!@#$%^&*+,-.?/;":=]?w?d?d?d?d' "$HASHES"
+  
+    # TEMP START
+    # WORD + digits (4–1) + 1 symbol (e.g., ePP2026@, ePP202@, ePP20@, ePP2@)
+    john --wordlist=$list $USER_ARGS --mask='?w?d?d?d?d[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='?w?d?d?d[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='?w?d?d[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='?w?d[!@#$%^&*+,-.?/;":=]' "$HASHES"
+
+    # 1 symbol + WORD + digits (4–1) (e.g., @ePP2026, @ePP202, @ePP20, @ePP2)
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?w?d?d?d?d' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?w?d?d?d' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?w?d?d' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?w?d' "$HASHES"
+
+    # WORD with embedded symbol + digits (4–1) (e.g., eP@P2026, eP@P202, eP@P20, eP@P2)
+    john --wordlist=$list $USER_ARGS --mask='?w[!@#$%^&*+,-.?/;":=]?w?d?d?d?d' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='?w[!@#$%^&*+,-.?/;":=]?w?d?d?d' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='?w[!@#$%^&*+,-.?/;":=]?w?d?d' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='?w[!@#$%^&*+,-.?/;":=]?w?d' "$HASHES"
+
+    # WORD + embedded symbol + digits (4–1) + 1 symbol (e.g., ePP@2026!, ePP@202!, ePP@20!, ePP@2!)
+    john --wordlist=$list $USER_ARGS --mask='?w[!@#$%^&*+,-.?/;":=]?w?d?d?d?d[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='?w[!@#$%^&*+,-.?/;":=]?w?d?d?d[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='?w[!@#$%^&*+,-.?/;":=]?w?d?d[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='?w[!@#$%^&*+,-.?/;":=]?w?d[!@#$%^&*+,-.?/;":=]' "$HASHES"
+
+    # Word + Digits + Symbol at end
+    john --wordlist=$list $USER_ARGS --mask='?w?d?d?d?d[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    
+    # TEMP end
+
+    # Word with embedded symbol + Digits
+    john --wordlist=$list $USER_ARGS --mask='?w[!@#$%^&*+,-.?/;":=]?w?d?d?d?d' "$HASHES"
+
+    # Word + Digits + Embedded symbol before last digit
+    john --wordlist=$list $USER_ARGS --mask='?w?d?d[!@#$%^&*+,-.?/;":=]?d' "$HASHES"
+
+    # Word + Digits + Symbol + Symbol (double suffix)
+    john --wordlist=$list $USER_ARGS --mask='?w?d?d?d?d[!@#$%^&*+,-.?/;":=][!@#$%^&*+,-.?/;":=]' "$HASHES"
+
     # WORD (e.g., Simba)
     john --wordlist=$list $USER_ARGS --mask='?w' "$HASHES"
 
@@ -108,6 +151,7 @@ for list in animals.txt football-players.txt football.txt others.txt rivers.txt 
     john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?w?d?d' "$HASHES"
     john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?w?d'
 
+
     ## Double Special Character Script
     
     # WORD + 2 CHAR (e.g., Simba!@)
@@ -133,6 +177,23 @@ for list in animals.txt football-players.txt football.txt others.txt rivers.txt 
     john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=][!@#$%^&*+,-.?/;":=]?w?d?d?d' "$HASHES"
     john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=][!@#$%^&*+,-.?/;":=]?w?d?d' "$HASHES"
     john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=][!@#$%^&*+,-.?/;":=]?w?d' "$HASHES"
+    
+    # 2 SPECIALS + WORD + 2 SPECIALS (e.g., !!Simba@@)
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=][!@#$%^&*+,-.?/;":=]?w[!@#$%^&*+,-.?/;":=][!@#$%^&*+,-.?/;":=]' "$HASHES"
+
+    # SPECIAL + WORD + NUMBER + SPECIAL (e.g., !Simba2025@)
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?w?d?d?d?d?d[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?w?d?d?d?d[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?w?d?d?d[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?w?d?d[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?w?d[!@#$%^&*+,-.?/;":=]' "$HASHES"
+
+    # SPECIAL + NUMBER + WORD + SPECIAL (e.g., !2025Simba@)
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?d?d?d?d?d?w[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?d?d?d?d?w[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?d?d?d?w[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?d?d?w[!@#$%^&*+,-.?/;":=]' "$HASHES"
+    john --wordlist=$list $USER_ARGS --mask='[!@#$%^&*+,-.?/;":=]?d?w[!@#$%^&*+,-.?/;":=]' "$HASHES"
 
     # NUMBER + 2 CHARS + WORD +  (e.g., 2025@!Simba)
     john --wordlist=$list $USER_ARGS --mask='?d?d?d?d[!@#$%^&*+,-.?/;":=][!@#$%^&*+,-.?/;":=]?w' "$HASHES"
